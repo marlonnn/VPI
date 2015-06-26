@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--复制此文档各种Ioc定义方式到需要的地方-->
+<objects xmlns="http://www.springframework.net">
+  
+  <object name="formMain" type="VPITest.UI.FormMain, VPITest">
+    <property name="udp" ref="udp"/>
+    <property name="selfTest" ref="selfTest"/>
+    <property name="generalTest" ref="generalTest"/>
+    <property name="fctTest" ref="fctTest"/>
+    <property name="testSemaphore" ref="testSemaphore"/>
+    <property name="formGeneralSN" ref="formGeneralSN"/>
+    <property name="formFCTSN" ref="formFCTSN"/>
+    <property name="formGeneralFind" ref="formGeneralFind"/>
+    <property name="formFCTFind" ref="formFCTFind"/>
+    <property name="formAbout" ref="formAbout"/>
+  </object>
+
+  <object name="formFCTSN" type="VPITest.UI.FormFCTSN, VPITest">
+    <property name="fctTest" ref="fctTest"/>
+    <property name="fctGlobalConfig" ref="fctGlobalConfig"/>
+  </object>
+
+  <object name="formFCTFind" type="VPITest.UI.FormFind, VPITest">
+    <property name="findType" value="FCT"/>
+    <property name="boardTypeList" value="PD1,VCOM"/>
+    <property name="dbADO" ref="dbADO"/>
+    <property name="fctMessageLogFile" ref="fctMessageLogFile"/>
+    <property name="generalMessageLogFile" ref="generalMessageLogFile"/>
+    <property name="pdfViewExe" value="//Resouces//FoxitReader.exe"/>
+  </object>
+
+  <object name="formGeneralSN" type="VPITest.UI.FormGeneralSN, VPITest">
+    <property name="generalTest" ref="generalTest"/>
+    <property name="generalGlobalConfig" ref="generalGlobalConfig"/>
+  </object>
+
+  <object name="formGeneralFind" type="VPITest.UI.FormFind, VPITest">
+    <property name="findType" value="GENERAL"/>
+    <property name="boardTypeList" value="PD1,VCOM,VPS,VIB,VOB,IOBUS,IOBE"/>
+    <property name="dbADO" ref="dbADO"/>
+    <property name="fctMessageLogFile" ref="fctMessageLogFile"/>
+    <property name="generalMessageLogFile" ref="generalMessageLogFile"/>
+    <property name="pdfViewExe" value="//Resouces//FoxitReader.exe"/>
+  </object>
+
+  <object name="formAbout" type="VPITest.UI.FormAbout, VPITest">
+    <property name="version" ref="version" />
+  </object>
+  
+</objects>

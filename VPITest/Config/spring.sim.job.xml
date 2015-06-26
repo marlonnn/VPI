@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--复制此文档各种Ioc定义方式到需要的地方-->
+<objects xmlns="http://www.springframework.net">
+
+  <object id="simJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="protocolFactorySimFct" />
+    <property name="TargetMethod" value="ExecuteInternal" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="simTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="simJob" />
+    <property name="StartDelay" value="1s" />
+    <property name="RepeatInterval" value="500ms" />
+  </object>
+
+  <object id="udpTxJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="udp" />
+    <property name="TargetMethod" value="TxInternal" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="udpTxTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="udpTxJob" />
+    <property name="StartDelay" value="1s" />
+    <property name="RepeatInterval" value="100ms" />
+  </object>
+
+  <object id="fctTestJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="fctTest" />
+    <property name="TargetMethod" value="ExecuteInternal" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="fctTestTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="fctTestJob" />
+    <property name="StartDelay" value="1s" />
+    <property name="RepeatInterval" value="200ms" />
+  </object>
+
+  <object id="fctFileFlushJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="fctMessageLogFile" />
+    <property name="TargetMethod" value="Flush" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="fctFileFlushTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="fctFileFlushJob" />
+    <property name="StartDelay" value="5s" />
+    <property name="RepeatInterval" value="1s" />
+  </object>
+
+  <object id="generalTestJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="generalTest" />
+    <property name="TargetMethod" value="ExecuteInternal" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="generalTestTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="generalTestJob" />
+    <property name="StartDelay" value="1s" />
+    <property name="RepeatInterval" value="100ms" />
+  </object>
+
+  <object id="generalFileFlushJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="generalMessageLogFile" />
+    <property name="TargetMethod" value="Flush" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="generalFileFlushTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="generalFileFlushJob" />
+    <property name="StartDelay" value="5s" />
+    <property name="RepeatInterval" value="1s" />
+  </object>
+
+  <object id="selfTestJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="selfTest" />
+    <property name="TargetMethod" value="ExecuteInternal" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="selfTestTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="selfTestJob" />
+    <property name="StartDelay" value="1s" />
+    <property name="RepeatInterval" value="100ms" />
+  </object>
+
+  <object id="selfFileFlushJob" type="Spring.Scheduling.Quartz.MethodInvokingJobDetailFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="TargetObject" ref="selfMessageLogFile" />
+    <property name="TargetMethod" value="Flush" />
+    <property name="concurrent" value="false" />
+  </object>
+  <object id="selfFileFlushTrigger" type="Spring.Scheduling.Quartz.SimpleTriggerObject, Spring.Scheduling.Quartz20">
+    <property name="JobDetail" ref="selfFileFlushJob" />
+    <property name="StartDelay" value="5s" />
+    <property name="RepeatInterval" value="1s" />
+  </object>
+
+  <object id="scheduler" type="Spring.Scheduling.Quartz.SchedulerFactoryObject, Spring.Scheduling.Quartz20">
+    <property name="triggers">
+      <list>
+        <ref object="simTrigger" />
+        <ref object="udpTxTrigger" />
+        <ref object="fctTestTrigger" />
+        <ref object="fctFileFlushTrigger" />
+        <ref object="generalTestTrigger" />
+        <ref object="generalFileFlushTrigger" />
+        <ref object="selfTestTrigger" />
+        <ref object="selfFileFlushTrigger" />
+      </list>
+    </property>
+  </object>
+
+</objects>

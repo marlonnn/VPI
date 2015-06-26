@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--复制此文档各种Ioc定义方式到需要的地方-->
+<objects xmlns="http://www.springframework.net">
+  
+  <object name="shakeResponse" type="VPITest.Protocol.ShakeResponse, VPITest">
+  </object>
+  <object name="boardStatusResponse" type="VPITest.Protocol.BoardStatusResponse, VPITest">
+  </object>
+  <object name="heartMsg" type="VPITest.Protocol.HeartMsg, VPITest">
+  </object>
+  <object name="componentTestResponse" type="VPITest.Protocol.ComponentTestResponse, VPITest">
+  </object>
+  <object name="vibvobTestResponse" type="VPITest.Protocol.VIBVOBTestResponse, VPITest">
+  </object>
+  <object name="stopFctTestResponse" type="VPITest.Protocol.StopFctTestResponse, VPITest">
+  </object>
+  <object name="vpsErrorInfoResponse" type="VPITest.Protocol.VPSErrorInfoResponse, VPITest">
+  </object>
+
+  <object name="protocolFactory" type="VPITest.Protocol.ProtocolFactory, VPITest">
+    <property name="frameProtocol" ref="frameProtocol"/>
+    <property name="rxQueue" ref="rxQueue"/>
+    <property name="rxFctMsgQueue" ref="rxFctMsgQueue"/>
+    <property name="rxGeneralMsgQueue" ref="rxGeneralMsgQueue"/>
+    <property name="rxSelfMsgQueue" ref="rxSelfMsgQueue"/>
+    <property name="decoders">
+      <dictionary>
+        <entry key="0x01" value-ref="shakeResponse" />
+        <entry key="0xB0" value-ref="boardStatusResponse" />
+        <entry key="0xB1" value-ref="heartMsg" />
+        <entry key="0xB2" value-ref="componentTestResponse" />
+        <entry key="0xB3" value-ref="vibvobTestResponse" />
+        <entry key="0xC1" value-ref="stopFctTestResponse" />
+        <entry key="0xB5" value-ref="vpsErrorInfoResponse" />
+      </dictionary>
+    </property>
+    <property name="txQueue" ref="txQueue"/>
+    <property name="txMsgQueue" ref="txMsgQueue"/>
+  </object>
+  
+</objects>

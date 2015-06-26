@@ -1,0 +1,407 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--复制此文档各种Ioc定义方式到需要的地方-->
+<objects xmlns="http://www.springframework.net">
+
+  <object name="cpupd1IP" type="System.Net.IPAddress, System">
+     <constructor-arg value="10,50,2,7"/>
+  </object>
+  <object name="vcomIP" type="System.Net.IPAddress, System">
+    <constructor-arg value="10,50,2,8"/>
+  </object>
+  <object name="cpupd1IPPort" type="System.Net.IPEndPoint, System">
+    <constructor-arg ref="cpupd1IP"/>
+    <constructor-arg value="41185"/>
+  </object>
+  <object name="vcomIPPort" type="System.Net.IPEndPoint, System">
+    <constructor-arg ref="vcomIP"/>
+    <constructor-arg value="41186"/>
+  </object>
+  
+  <!--各种设备-->
+  <!--除了fctTest和allTest以外，其他地方不要使用此变量，因为此变量会被重写覆盖-->
+  <object name="cabinet" type="VPITest.Model.Cabinet, VPITest">
+    <property name="EqId" value="0x5,0xff,0xff,0xff,0xff"/>
+    <property name="EqName" value="VPI3"/>
+    <property name="Racks">
+      <list element-type="VPITest.Model.Rack, VPITest">
+        <ref object="rack1"/>
+        <ref object="rack2"/>
+        <ref object="rack3"/>
+      </list>
+    </property>
+  </object>
+
+  <!--系统机笼的配置-->
+  <object name="rack1" type="VPITest.Model.Rack, VPITest">
+    <property name="EqId" value="0x5,0x1,0xff,0xff,0xff"/>
+    <property name="EqName" value="系统机笼"/>    
+    <property name="Boards">
+      <list element-type="VPITest.Model.Board, VPITest">
+        <ref object="CPUPD1"/>
+        <ref object="VPS"/>
+        <ref object="IOBUS1"/>
+        <ref object="VCOM"/>
+      </list>
+    </property>
+  </object>
+  <!--BOARD设置 CPUPD1-->
+  <object name="CPUPD1" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0xff,0xff"/>
+    <property name="EqName" value="CPUPD1"/>
+    <property name="BoardType" value="PD1"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="IsCommincationBoard" value="true"/>
+    <property name="CommunicationIP" ref="cpupd1IPPort"/>
+    <property name="ParentRack" ref="rack1"/>
+    <property name="ComponentTypes">
+      <list element-type="VPITest.Model.ComponentType, VPITest">
+        <ref object="PD1COM"/>
+        <ref object="PD1NET"/>
+        <ref object="PD1CAN"/>
+        <ref object="PD1Timer"/>
+        <ref object="PD1MemUnit"/>
+      </list>
+    </property>
+  </object>
+  <object name="PD1COM" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x1,0xff"/>
+    <property name="EqName" value="串口"/>
+    <property name="ParentBoard" ref="CPUPD1"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="PD1COM1"/>
+        <ref object="PD1COM2"/>
+        <ref object="PD1COM3"/>
+        <ref object="PD1COM4"/>
+      </list>
+    </property>
+  </object>
+  <object name="PD1COM1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x1,0x01"/>
+    <property name="EqName" value="串口1"/>
+    <property name="ParentComponentType" ref="PD1COM"/>
+  </object>
+  <object name="PD1COM2" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x1,0x02"/>
+    <property name="EqName" value="串口2"/>
+    <property name="ParentComponentType" ref="PD1COM"/>
+  </object>
+  <object name="PD1COM3" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x1,0x03"/>
+    <property name="EqName" value="串口3"/>
+    <property name="ParentComponentType" ref="PD1COM"/>
+  </object>
+  <object name="PD1COM4" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x1,0x04"/>
+    <property name="EqName" value="串口4"/>
+    <property name="ParentComponentType" ref="PD1COM"/>
+  </object>
+  <object name="PD1NET" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x2,0xff"/>
+    <property name="EqName" value="网口"/>
+    <property name="ParentBoard" ref="CPUPD1"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="PD1NET1"/>
+        <ref object="PD1NET2"/>
+      </list>
+    </property>
+  </object>
+  <object name="PD1NET1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x2,0x01"/>
+    <property name="EqName" value="网口1"/>
+    <property name="ParentComponentType" ref="PD1NET"/>
+  </object>
+  <object name="PD1NET2" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x2,0x02"/>
+    <property name="EqName" value="网口2"/>
+    <property name="ParentComponentType" ref="PD1NET"/>
+  </object>
+  <object name="PD1CAN" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x3,0xff"/>
+    <property name="EqName" value="CAN口"/>
+    <property name="ParentBoard" ref="CPUPD1"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="PD1CAN1"/>
+        <ref object="PD1CAN2"/>
+      </list>
+    </property>
+  </object>
+  <object name="PD1CAN1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x3,0x01"/>
+    <property name="EqName" value="CAN口1"/>
+    <property name="ParentComponentType" ref="PD1CAN"/>
+  </object>
+  <object name="PD1CAN2" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x3,0x02"/>
+    <property name="EqName" value="CAN口2"/>
+    <property name="ParentComponentType" ref="PD1CAN"/>
+  </object>
+  <object name="PD1Timer" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x4,0xff"/>
+    <property name="EqName" value="定时器"/>
+    <property name="ParentBoard" ref="CPUPD1"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="PD1Timer1"/>
+      </list>
+    </property>
+  </object>
+  <object name="PD1Timer1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x4,0x01"/>
+    <property name="EqName" value="定时器"/>
+    <property name="ParentComponentType" ref="PD1Timer"/>
+  </object>
+  <object name="PD1MemUnit" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x25,0xff"/>
+    <property name="EqName" value="内存单元"/>
+    <property name="ParentBoard" ref="CPUPD1"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="PD1MemUnit1"/>
+      </list>
+    </property>
+  </object>
+  <object name="PD1MemUnit1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x1,0x25,0x01"/>
+    <property name="EqName" value="内存单元"/>
+    <property name="ParentComponentType" ref="PD1MemUnit"/>
+  </object>
+
+  <!--BOARD设置 VCOM-->
+  <object name="VCOM" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0xff,0xff"/>
+    <property name="EqName" value="VCOM"/>
+    <property name="BoardType" value="VCOM"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="IsCommincationBoard" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack1"/>
+    <property name="ComponentTypes">
+      <list element-type="VPITest.Model.ComponentType, VPITest">
+        <ref object="VCOMCOM"/>
+        <ref object="VCOMNET"/>
+        <ref object="VCOMCAN"/>
+        <ref object="VCOMTimer"/>
+        <ref object="VCOMMemUnit"/>
+      </list>
+    </property>
+  </object>
+  <object name="VCOMCOM" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x1,0xff"/>
+    <property name="EqName" value="串口"/>
+    <property name="ParentBoard" ref="VCOM"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="VCOMCOMCOM1"/>
+        <ref object="VCOMCOMCOM2"/>
+        <ref object="VCOMCOMCOM3"/>
+        <ref object="VCOMCOMCOM4"/>
+      </list>
+    </property>
+  </object>
+  <object name="VCOMCOMCOM1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x1,0x01"/>
+    <property name="EqName" value="串口1"/>
+    <property name="ParentComponentType" ref="VCOMCOM"/>
+  </object>
+  <object name="VCOMCOMCOM2" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x1,0x02"/>
+    <property name="EqName" value="串口2"/>
+    <property name="ParentComponentType" ref="VCOMCOM"/>
+  </object>
+  <object name="VCOMCOMCOM3" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x1,0x03"/>
+    <property name="EqName" value="串口3"/>
+    <property name="ParentComponentType" ref="VCOMCOM"/>
+  </object>
+  <object name="VCOMCOMCOM4" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x1,0x04"/>
+    <property name="EqName" value="串口4"/>
+    <property name="ParentComponentType" ref="VCOMCOM"/>
+  </object>
+  <object name="VCOMNET" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x2,0xff"/>
+    <property name="EqName" value="网口"/>
+    <property name="ParentBoard" ref="VCOM"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="VCOMNET1"/>
+        <ref object="VCOMNET2"/>
+      </list>
+    </property>
+  </object>
+  <object name="VCOMNET1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x2,0x01"/>
+    <property name="EqName" value="网口1"/>
+    <property name="ParentComponentType" ref="VCOMNET"/>
+  </object>
+  <object name="VCOMNET2" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x2,0x02"/>
+    <property name="EqName" value="网口2"/>
+    <property name="ParentComponentType" ref="VCOMNET"/>
+  </object>
+  <object name="VCOMCAN" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x3,0xff"/>
+    <property name="EqName" value="CAN口"/>
+    <property name="ParentBoard" ref="VCOM"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="VCOMCAN1"/>
+        <ref object="VCOMCAN2"/>
+      </list>
+    </property>
+  </object>
+  <object name="VCOMCAN1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x3,0x01"/>
+    <property name="EqName" value="CAN口1"/>
+    <property name="ParentComponentType" ref="VCOMCAN"/>
+  </object>
+  <object name="VCOMCAN2" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x3,0x02"/>
+    <property name="EqName" value="CAN口2"/>
+    <property name="ParentComponentType" ref="VCOMCAN"/>
+  </object>
+  <object name="VCOMTimer" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x4,0xff"/>
+    <property name="EqName" value="定时器"/>
+    <property name="ParentBoard" ref="VCOM"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="VCOMTimer1"/>
+      </list>
+    </property>
+  </object>
+  <object name="VCOMTimer1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x4,0x01"/>
+    <property name="EqName" value="定时器"/>
+    <property name="ParentComponentType" ref="VCOMTimer"/>
+  </object>
+  <object name="VCOMMemUnit" type="VPITest.Model.ComponentType, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x25,0xff"/>
+    <property name="EqName" value="内存单元"/>
+    <property name="ParentBoard" ref="VCOM"/>
+    <property name="Components">
+      <list element-type="VPITest.Model.Component, VPITest">
+        <ref object="VCOMMemUnit1"/>
+      </list>
+    </property>
+  </object>
+  <object name="VCOMMemUnit1" type="VPITest.Model.Component, VPITest">
+    <property name="EqId" value="0x5,0x1,0x7,0x25,0x01"/>
+    <property name="EqName" value="内存单元"/>
+    <property name="ParentComponentType" ref="VCOMMemUnit"/>
+  </object>
+  
+  <!--BOARD设置 VPS-->
+  <object name="VPS" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x1,0x2,0xff,0xff"/>
+    <property name="EqName" value="VPS"/>
+    <property name="BoardType" value="VPS"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack1"/>
+  </object>
+  
+  <!--BOARD设置 iobus1-->
+  <object name="IOBUS1" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x1,0x3,0xff,0xff"/>
+    <property name="EqName" value="IOBUS1"/>
+    <property name="BoardType" value="IOBUS"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack1"/>
+  </object>
+
+  <!--机笼1的配置-->
+  <object name="rack2" type="VPITest.Model.Rack, VPITest">
+    <property name="EqId" value="0x5,0x2,0xff,0xff,0xff"/>
+    <property name="EqName" value="机笼1"/>
+    <property name="Boards">
+      <list element-type="VPITest.Model.Board, VPITest">
+        <ref object="IOBE1"/>
+        <ref object="VOB161_4"/>
+        <ref object="VIB161_7"/>
+        <ref object="VIB161_8"/>
+      </list>
+    </property>
+  </object>
+  <!--BOARD设置 IOBE-->
+  <object name="IOBE1" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x2,0x1,0xff,0xff"/>
+    <property name="EqName" value="IOBE(1)"/>
+    <property name="BoardType" value="IOBE"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack2"/>
+  </object>
+  <!--BOARD设置 VOB-->
+  <object name="VOB161_4" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x2,0x4,0xff,0xff"/>
+    <property name="EqName" value="VOB16(1_4)"/>
+    <property name="BoardType" value="VOB"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack2"/>
+  </object>
+  <!--BOARD设置 VIB-->
+  <object name="VIB161_7" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x2,0x7,0xff,0xff"/>
+    <property name="EqName" value="VIB16(1_7)"/>
+    <property name="BoardType" value="VIB"/>
+    <property name="CanGeneralTest" value="false"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack2"/>
+  </object>
+  <!--BOARD设置 VIB-->
+  <object name="VIB161_8" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x2,0x8,0xff,0xff"/>
+    <property name="EqName" value="VIB16(1_8)"/>
+    <property name="BoardType" value="VIB"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack2"/>
+  </object>
+
+  <!--机笼2的配置-->
+  <object name="rack3" type="VPITest.Model.Rack, VPITest">
+    <property name="EqId" value="0x5,0x3,0xff,0xff,0xff"/>
+    <property name="EqName" value="机笼2"/>
+    <property name="Boards">
+      <list element-type="VPITest.Model.Board, VPITest">
+        <ref object="IOBE2"/>
+        <ref object="VOB162_4"/>
+        <ref object="VIB162_8"/>
+      </list>
+    </property>
+  </object>
+  <!--BOARD设置 IOBE-->
+  <object name="IOBE2" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x3,0x1,0xff,0xff"/>
+    <property name="EqName" value="IOBE(2)"/>
+    <property name="BoardType" value="IOBE"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack3"/>
+  </object>
+  <!--BOARD设置 VPS-->
+  <object name="VOB162_4" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x3,0x4,0xff,0xff"/>
+    <property name="EqName" value="VOB16(2_4)"/>
+    <property name="BoardType" value="VOB"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack3"/>
+  </object>
+  <!--BOARD设置 VPS-->
+  <object name="VIB162_8" type="VPITest.Model.Board, VPITest">
+    <property name="EqId" value="0x5,0x3,0x8,0xff,0xff"/>
+    <property name="EqName" value="VIB16(2_8)"/>
+    <property name="BoardType" value="VIB"/>
+    <property name="CanGeneralTest" value="true"/>
+    <property name="CommunicationIP" ref="vcomIPPort"/>
+    <property name="ParentRack" ref="rack3"/>
+  </object>
+  
+</objects>

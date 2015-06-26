@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--复制此文档各种Ioc定义方式到需要的地方-->
+<objects xmlns="http://www.springframework.net">
+
+  <object name="frameProtocol" type="VPITest.Net.FrameProtocol, VPITest">
+    <property name="appMarkHead" value="0X5A"/>
+    <property name="appMarkTail" value="0XA5"/>
+  </object>
+  
+  <object id="udpNetServer" type="Summer.System.NET.UdpNetServer,Summer.System">
+    <constructor-arg value="13399"/>
+  </object>
+  <object id="udpNetClient1" type="Summer.System.NET.UdpNetClient,Summer.System">
+    <constructor-arg ref="cpupd1IPPort"/>
+  </object>
+  <object id="udpNetClient2" type="Summer.System.NET.UdpNetClient,Summer.System">
+    <constructor-arg ref="vcomIPPort"/>
+  </object>
+  
+  <object name="udp" type="VPITest.Net.Udp, VPITest">
+    <property name="rxQueue" ref="rxQueue"/>    
+    <property name="udpNetServer" ref="udpNetServer"/>
+    <property name="txQueue" ref="txQueue"/>
+    <property name="udpNetClients">
+      <dictionary>
+        <entry key-ref="cpupd1IPPort" value-ref="udpNetClient1"/>
+        <entry key-ref="vcomIPPort" value-ref="udpNetClient2"/>
+      </dictionary>
+    </property>
+  </object>
+  
+</objects>

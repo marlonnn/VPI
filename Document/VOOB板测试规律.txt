@@ -1,0 +1,26 @@
+    if(g_No50ms % 2 == 0)/*偶周期*/
+    {
+        TEMPIADS0 = &vob_ckWord_even[VOBNo*16];/*无输出*/
+
+        if(g_No50ms == 2)/*有输出*/
+        {
+	       TEMPIADS1 = &vob_ock_even[VOBNo*16];
+        }
+		else
+        {
+           TEMPIADS1 = &vob_true_even[VOBNo*16];
+        }
+    }
+	else/*奇周期*/
+    {
+	    TEMPIADS0 = &vob_ckWord_odd[VOBNo*16];/*无输出*/
+
+        if(g_No50ms == 1)/*有输出*/
+        {
+	       TEMPIADS1 = &vob_ock_odd[VOBNo*16];
+        }
+		else
+        {
+	       TEMPIADS1 = &vob_true_odd[VOBNo*16];
+        }
+	}

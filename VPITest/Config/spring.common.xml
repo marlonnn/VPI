@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--复制此文档各种Ioc定义方式到需要的地方-->
+<objects xmlns="http://www.springframework.net">
+  
+  <object name="rxFctMsgQueue" type="VPITest.Common.RxMsgQueue, VPITest">
+  </object>
+
+  <object name="rxGeneralMsgQueue" type="VPITest.Common.RxMsgQueue, VPITest">
+  </object>
+
+  <object name="rxSelfMsgQueue" type="VPITest.Common.RxMsgQueue, VPITest">
+  </object>
+
+  <object name="rxQueue" type="VPITest.Common.RxQueue, VPITest">
+  </object>
+
+  <object name="txMsgQueue" type="VPITest.Common.TxMsgQueue, VPITest">
+  </object>
+  
+  <object name="testSemaphore" type="VPITest.Common.TestSemaphore, VPITest">
+  </object>
+
+  <object name="generalGlobalConfig" type="VPITest.Common.GlobalConfig, VPITest">
+    <property name="basePath" value="\\Data\\General\\"/>
+  </object>
+
+  <object name="fctGlobalConfig" type="VPITest.Common.GlobalConfig, VPITest">
+    <property name="basePath" value="\\Data\\Fct\\"/>
+  </object>
+
+  <object name="txQueue" type="VPITest.Common.TxQueue, VPITest">
+  </object>
+  
+  <object name="version" type="VPITest.Common.Version, VPITest">
+    <property name="Ver" value="V1.0.0"/>
+    <property name="Build" value="20150501"/>
+  </object>
+  
+</objects>

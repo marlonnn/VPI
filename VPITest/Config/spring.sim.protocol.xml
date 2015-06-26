@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!--复制此文档各种Ioc定义方式到需要的地方-->
+<objects xmlns="http://www.springframework.net">
+  
+  <object name="protocolFactorySimFct" type="VPITest.Protocol.ProtocolFactorySimFct, VPITest">
+    <property name="cabinet" ref="cabinet"/>
+    <property name="rxFctMsgQueue" ref="rxFctMsgQueue"/>
+    <property name="rxGeneralMsgQueue" ref="rxGeneralMsgQueue"/>
+    <property name="rxSelfMsgQueue" ref="rxSelfMsgQueue"/>
+    <property name="txMsgQueue" ref="txMsgQueue"/>
+  </object>
+  
+</objects>
