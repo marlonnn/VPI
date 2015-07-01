@@ -1,0 +1,19 @@
+syntax: glob
+obj/x86/Debug/GenerateResource-IntelliTrace.read.13.tlog
+obj/x86/Debug/GenerateResource-IntelliTrace.read.14.tlog
+obj/x86/Debug/GenerateResource-IntelliTrace.read.15.tlog
+obj/x86/Debug/GenerateResource-IntelliTrace.read.4.tlog
+obj/x86/Debug/GenerateResource-IntelliTrace.read.8.tlog
+obj/x86/Debug/GenerateResource-IntelliTrace.write.1.tlog
+obj/x86/Debug/GenerateResource-IntelliTrace.write.4.tlog
+obj/x86/Debug/GenerateResource.read.324.tlog
+obj/x86/Debug/GenerateResource.read.328.tlog
+obj/x86/Debug/GenerateResource.read.329.tlog
+VPITest/obj/x86/Debug/VPITest.UI.FrmFctSN.resources.ws
+VPITest/obj/x86/Debug/VPITest.UI.FrmFind.resources.ws
+VPITest/obj/x86/Debug/VPITest.UI.FrmGeneralMain.resources.ws
+VPITest/obj/x86/Debug/VPITest.UI.FrmGeneralSN.resources.ws
+VPITest/obj/x86/Debug/VPITest.UI.FrmMain.resources.ws
+VPITest/obj/x86/Debug/VPITest.csproj.FileListAbsolute.txt
+VPITest/obj/x86/Debug/TypeTest.UI.FormRackConfig.resources.ws
+VPITest/obj/x86/Debug/TypeTest.UI.FormTestConfig.resources.ws
