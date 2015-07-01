@@ -28,9 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FormFind));
             this.ribbonControl1 = new DevComponents.DotNetBar.RibbonControl();
             this.groupPanel1 = new DevComponents.DotNetBar.Controls.GroupPanel();
             this.cbFinishResult = new DevComponents.DotNetBar.Controls.ComboBoxEx();
@@ -49,6 +51,10 @@
             this.dtiBegin = new DevComponents.Editors.DateTimeAdv.DateTimeInput();
             this.cbLastMonth = new DevComponents.DotNetBar.Controls.CheckBoxX();
             this.dataGridView = new DevComponents.DotNetBar.Controls.DataGridViewX();
+            this.groupPanel2 = new DevComponents.DotNetBar.Controls.GroupPanel();
+            this.cbCopyDiagnose = new DevComponents.DotNetBar.Controls.CheckBoxX();
+            this.btnCopyAll = new DevComponents.DotNetBar.ButtonX();
+            this.btnCopySelected = new DevComponents.DotNetBar.ButtonX();
             this.Column10 = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.Column1 = new DevComponents.DotNetBar.Controls.DataGridViewLabelXColumn();
             this.Column2 = new DevComponents.DotNetBar.Controls.DataGridViewLabelXColumn();
@@ -63,10 +69,6 @@
             this.Column9 = new DevComponents.DotNetBar.Controls.DataGridViewButtonXColumn();
             this.Column12 = new DevComponents.DotNetBar.Controls.DataGridViewLabelXColumn();
             this.Column13 = new DevComponents.DotNetBar.Controls.DataGridViewLabelXColumn();
-            this.groupPanel2 = new DevComponents.DotNetBar.Controls.GroupPanel();
-            this.cbCopyDiagnose = new DevComponents.DotNetBar.Controls.CheckBoxX();
-            this.btnCopyAll = new DevComponents.DotNetBar.ButtonX();
-            this.btnCopySelected = new DevComponents.DotNetBar.ButtonX();
             this.groupPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtiEnd)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dtiBegin)).BeginInit();
@@ -76,6 +78,7 @@
             // 
             // ribbonControl1
             // 
+            this.ribbonControl1.BackgroundImagePosition = DevComponents.DotNetBar.eBackgroundImagePosition.Center;
             // 
             // 
             // 
@@ -203,7 +206,7 @@
             // 
             this.tbBoardSn.Border.Class = "TextBoxBorder";
             this.tbBoardSn.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.tbBoardSn.Location = new System.Drawing.Point(285, 39);
+            this.tbBoardSn.Location = new System.Drawing.Point(286, 39);
             this.tbBoardSn.Name = "tbBoardSn";
             this.tbBoardSn.Size = new System.Drawing.Size(125, 21);
             this.tbBoardSn.TabIndex = 21;
@@ -226,9 +229,9 @@
             this.label5.ForeColor = System.Drawing.SystemColors.WindowFrame;
             this.label5.Location = new System.Drawing.Point(231, 45);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(53, 12);
+            this.label5.Size = new System.Drawing.Size(59, 12);
             this.label5.TabIndex = 19;
-            this.label5.Text = "板卡SN号";
+            this.label5.Text = "板卡S/N号";
             // 
             // label4
             // 
@@ -269,13 +272,16 @@
             // 
             // 
             this.cbNoLimitDate.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.cbNoLimitDate.Checked = true;
+            this.cbNoLimitDate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbNoLimitDate.CheckValue = "Y";
             this.cbNoLimitDate.Location = new System.Drawing.Point(3, 4);
             this.cbNoLimitDate.Name = "cbNoLimitDate";
             this.cbNoLimitDate.Size = new System.Drawing.Size(100, 23);
             this.cbNoLimitDate.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cbNoLimitDate.TabIndex = 12;
             this.cbNoLimitDate.Text = "全部时间段";
-            this.cbNoLimitDate.CheckedChanged += new System.EventHandler(this.cbNoLimitDate_CheckedChanged);
+            this.cbNoLimitDate.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
             // 
             // label2
             // 
@@ -405,29 +411,26 @@
             // 
             // 
             this.cbLastMonth.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.cbLastMonth.Checked = true;
-            this.cbLastMonth.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbLastMonth.CheckValue = "Y";
             this.cbLastMonth.Location = new System.Drawing.Point(109, 4);
             this.cbLastMonth.Name = "cbLastMonth";
             this.cbLastMonth.Size = new System.Drawing.Size(100, 23);
             this.cbLastMonth.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
             this.cbLastMonth.TabIndex = 7;
             this.cbLastMonth.Text = "近一月";
-            this.cbLastMonth.CheckedChanged += new System.EventHandler(this.cbLastMonth_CheckedChanged);
+            this.cbLastMonth.CheckedChanged += new System.EventHandler(this.cb_CheckedChanged);
             // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Column10,
@@ -444,14 +447,14 @@
             this.Column9,
             this.Column12,
             this.Column13});
-            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle9.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
-            dataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle9;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(21)))), ((int)(((byte)(110)))));
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EnableHeadersVisualStyles = false;
             this.dataGridView.GridColor = System.Drawing.Color.FromArgb(((int)(((byte)(208)))), ((int)(((byte)(215)))), ((int)(((byte)(229)))));
@@ -460,106 +463,18 @@
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersBorderStyle = System.Windows.Forms.DataGridViewHeaderBorderStyle.Single;
-            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle10.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            dataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle10;
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
             this.dataGridView.RowHeadersWidth = 10;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(1079, 430);
             this.dataGridView.TabIndex = 3;
-            // 
-            // Column10
-            // 
-            this.Column10.HeaderText = "选择";
-            this.Column10.Name = "Column10";
-            this.Column10.Width = 50;
-            // 
-            // Column1
-            // 
-            this.Column1.HeaderText = "测试序号";
-            this.Column1.Name = "Column1";
-            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Column2
-            // 
-            this.Column2.HeaderText = "测试时间";
-            this.Column2.Name = "Column2";
-            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column2.Width = 150;
-            // 
-            // Column3
-            // 
-            this.Column3.HeaderText = "测试时长";
-            this.Column3.Name = "Column3";
-            // 
-            // Column4
-            // 
-            this.Column4.HeaderText = "测试人员";
-            this.Column4.Name = "Column4";
-            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Column5
-            // 
-            this.Column5.HeaderText = "板卡类型";
-            this.Column5.Name = "Column5";
-            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Column7
-            // 
-            this.Column7.HeaderText = "板卡名称";
-            this.Column7.Name = "Column7";
-            this.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Column6
-            // 
-            this.Column6.HeaderText = "板卡S/N号";
-            this.Column6.Name = "Column6";
-            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.Column6.Width = 200;
-            // 
-            // clnTestedItems
-            // 
-            this.clnTestedItems.HeaderText = "测试项目";
-            this.clnTestedItems.Name = "clnTestedItems";
-            this.clnTestedItems.Width = 200;
-            // 
-            // Column8
-            // 
-            this.Column8.HeaderText = "测试结果";
-            this.Column8.Name = "Column8";
-            this.Column8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Column11
-            // 
-            this.Column11.HeaderText = "结束原因";
-            this.Column11.Name = "Column11";
-            this.Column11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            // 
-            // Column9
-            // 
-            this.Column9.HeaderText = "用户报告";
-            this.Column9.Name = "Column9";
-            this.Column9.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.Column9.Text = null;
-            this.Column9.Width = 380;
-            // 
-            // Column12
-            // 
-            this.Column12.HeaderText = "诊断报告";
-            this.Column12.Name = "Column12";
-            this.Column12.Visible = false;
-            // 
-            // Column13
-            // 
-            this.Column13.HeaderText = "诊断日志";
-            this.Column13.Name = "Column13";
-            this.Column13.Visible = false;
             // 
             // groupPanel2
             // 
@@ -640,6 +555,99 @@
             this.btnCopySelected.Text = "导出选中";
             this.btnCopySelected.Click += new System.EventHandler(this.btnCopySelected_Click);
             // 
+            // Column10
+            // 
+            this.Column10.HeaderText = "选择";
+            this.Column10.Name = "Column10";
+            this.Column10.Width = 50;
+            // 
+            // Column1
+            // 
+            this.Column1.HeaderText = "测试序号";
+            this.Column1.Name = "Column1";
+            this.Column1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column1.TextAlignment = System.Drawing.StringAlignment.Center;
+            // 
+            // Column2
+            // 
+            this.Column2.HeaderText = "测试时间";
+            this.Column2.Name = "Column2";
+            this.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column2.TextAlignment = System.Drawing.StringAlignment.Center;
+            this.Column2.Width = 150;
+            // 
+            // Column3
+            // 
+            this.Column3.HeaderText = "测试时长";
+            this.Column3.Name = "Column3";
+            // 
+            // Column4
+            // 
+            this.Column4.HeaderText = "测试人员";
+            this.Column4.Name = "Column4";
+            this.Column4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column5
+            // 
+            this.Column5.HeaderText = "板卡类型";
+            this.Column5.Name = "Column5";
+            this.Column5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column7
+            // 
+            this.Column7.HeaderText = "板卡名称";
+            this.Column7.Name = "Column7";
+            this.Column7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column6
+            // 
+            this.Column6.HeaderText = "板卡S/N号";
+            this.Column6.Name = "Column6";
+            this.Column6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.Column6.Width = 200;
+            // 
+            // clnTestedItems
+            // 
+            this.clnTestedItems.HeaderText = "测试项目";
+            this.clnTestedItems.Name = "clnTestedItems";
+            this.clnTestedItems.Width = 200;
+            // 
+            // Column8
+            // 
+            this.Column8.HeaderText = "测试结果";
+            this.Column8.Name = "Column8";
+            this.Column8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column11
+            // 
+            this.Column11.HeaderText = "结束原因";
+            this.Column11.Name = "Column11";
+            this.Column11.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
+            // Column9
+            // 
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column9.DefaultCellStyle = dataGridViewCellStyle2;
+            this.Column9.HeaderText = "用户报告";
+            this.Column9.Name = "Column9";
+            this.Column9.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.Column9.Text = null;
+            this.Column9.Width = 380;
+            // 
+            // Column12
+            // 
+            this.Column12.HeaderText = "诊断报告";
+            this.Column12.Name = "Column12";
+            this.Column12.Visible = false;
+            // 
+            // Column13
+            // 
+            this.Column13.HeaderText = "诊断日志";
+            this.Column13.Name = "Column13";
+            this.Column13.Visible = false;
+            // 
             // FormFind
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -649,9 +657,9 @@
             this.Controls.Add(this.groupPanel2);
             this.Controls.Add(this.groupPanel1);
             this.Controls.Add(this.ribbonControl1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FormFind";
             this.Padding = new System.Windows.Forms.Padding(0, 0, 0, 10);
-            this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "数据查询";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

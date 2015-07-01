@@ -101,6 +101,11 @@ namespace VPITest.UI
             try
             {
                 fctTest.PlanRunningTime = 60 * int.Parse(tbRunningPlan.Text);
+                if (fctTest.PlanRunningTime <= 0 )
+                {
+                    MessageBox.Show("测试预设时间应该大于0。");
+                    return;
+                }
             }
             catch (Exception ee)
             {

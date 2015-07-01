@@ -102,14 +102,30 @@ namespace VPITest.UI
                     foreach (TreeNode bn in r.Nodes)
                     {
                         Board b = bn.Tag as Board;
-                        if (b.IsGeneralTestPassed == true)//可测组件没有报错
+                        if (b.IsGeneralTestTested == true && b.IsGeneralTestPassed == true)//待测组件没有报错
                         {
                             bn.BackColor = passColor;
                         }
-                        else if (b.IsGeneralTestPassed == false)//可测组件报错
+                        else if (b.IsGeneralTestTested == true && b.IsGeneralTestPassed == false)//待测组件报错
                         {
                             bn.BackColor = failColor;
                         }
+                        else if (b.IsGeneralTestTested == false && b.IsGeneralTestPassed == true)//非待测组件没有报错
+                        {
+                            bn.BackColor = normalColor;
+                        }
+                        else if (b.IsGeneralTestTested == false && b.IsGeneralTestPassed == false)//非待测组件报错
+                        {
+                            bn.BackColor = warningColor;
+                        }
+                        //if (b.IsGeneralTestPassed == true)//可测组件没有报错
+                        //{
+                        //    bn.BackColor = passColor;
+                        //}
+                        //else if (b.IsGeneralTestPassed == false)//可测组件报错
+                        //{
+                        //    bn.BackColor = failColor;
+                        //}
                     }//end b.Nodes;
                 }//end r.Nodes
             }//end cabinetTree.Nodes 
@@ -246,7 +262,6 @@ namespace VPITest.UI
             baseroot.Tag = sysRack;
             baseroot.Text = sysRack.EqName;
 
-
             TreeNode cpuBoardNode = new TreeNode();
             cpuBoardNode.Tag = cpuBoard;
             cpuBoardNode.Text = cpuBoard.EqName;
@@ -282,9 +297,15 @@ namespace VPITest.UI
 
             baseroot.ExpandAll();
             fctCheckBoxTree.Nodes.Add(baseroot);
+            foreach (TreeNode cNode in fctCheckBoxTree.Nodes)
+            {
+                fctCheckBoxTree.HideCheckBox(cNode);
+                foreach (TreeNode rNode in cNode.Nodes)
+                {
+                    fctCheckBoxTree.HideCheckBox(rNode);
+                }
+            }
             fctCheckBoxTree.HideCheckBox(baseroot);
-            fctCheckBoxTree.HideCheckBox(cpuBoardNode);
-            fctCheckBoxTree.HideCheckBox(vcomBoardNode);
             fctCheckBoxTree.Refresh();
         }
 
@@ -476,7 +497,7 @@ namespace VPITest.UI
             }
             else
             {
-                fctTest.FinishManualTest();
+                fctTest.FinishManualTest(Common.TestStatus.FORCE_FINISH, DbADO.TEST_FINISH_RESULT_MANUAL);
                 UIFCTFinish();
 
             }
@@ -492,10 +513,6 @@ namespace VPITest.UI
             Report.ExploreFctReportFolder();
         }
 
-        private void btnFCTDialog_Click(object sender, EventArgs e)
-        {
-            Report.ExploreFctDiagReportFolder();
-        }
         #endregion
 
         #region 组件测试事件（FCT）
@@ -505,7 +522,8 @@ namespace VPITest.UI
                 return;
             TestStatusEventArgs ea = e as TestStatusEventArgs;
             fctLogList.AppendLog(new string[] { DateTime.Now.ToString("HH:mm:ss:fff"), ea.Reason });
-            if (ea.CurStatus == Common.TestStatus.EXPECTED_FINNISH || ea.CurStatus == Common.TestStatus.UNEXPECTED_FINNISH)
+            if (ea.CurStatus == Common.TestStatus.EXPECTED_FINNISH || ea.CurStatus == Common.TestStatus.UNEXPECTED_FINNISH ||
+                ea.CurStatus == Common.TestStatus.FORCE_FINISH)
             {
                 UpdateFCTTreeNodeColor();
                 isUIStart = false;
@@ -581,6 +599,7 @@ namespace VPITest.UI
                     }
                 }
             }
+            generalCheckBoxTree.HideCheckBox(baseroot);
             generalCheckBoxTree.Refresh();
         }
 
@@ -791,10 +810,6 @@ namespace VPITest.UI
             Report.ExploreGeneralReportFolder();
         }
 
-        private void btnGeneralDialog_Click(object sender, EventArgs e)
-        {
-            Report.ExploreGeneralDiagReportFolder();
-        }
         #endregion
 
         #region 单板测试事件（综合）

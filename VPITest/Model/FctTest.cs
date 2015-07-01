@@ -20,8 +20,6 @@ namespace VPITest.Model
     {
         //Key测试序号，唯一标识本次测试
         public string Key;
-        //上一次的key
-        public string LastKey;
         //测试人
         public string Tester = "";
         //待测试机柜
@@ -61,6 +59,8 @@ namespace VPITest.Model
         int preTimeout;                     //spring初始化完成后后，重载也不覆盖，单态唯一
         [NonSerialized]
         int runTimeout;                    //spring初始化完成后后，重载也不覆盖，单态唯一
+        [NonSerialized]
+        protected int delayTime;    //开始正式开始第一次心跳宽恕(单位：秒)
 
         [field: NonSerialized]
         DateTime preTestTime;
@@ -159,14 +159,13 @@ namespace VPITest.Model
                             if (!preTimeoutDic.ContainsKey(b))
                             {
                                 preTimeoutDic.Add(b, false);         //针对板卡设定超时
-                                runTimeoutDic.Add(b, DateTime.Now);
                             }
                         }
                     }
                 }
             }
             //进入临界状态
-            GenTestStatusChangeEvent(TestStatus, TestStatus.THRESHOLD, "开始或者重新开始一次新的FCT测试。");
+            GenTestStatusChangeEvent(TestStatus, TestStatus.THRESHOLD, "开始或者重新开始一次新的组件测试。");
             TestStatus = TestStatus.THRESHOLD;
             try
             {
@@ -202,6 +201,11 @@ namespace VPITest.Model
                         {
                             c.IsFctTestPassed = true;//默认是false，检查通过后才全部置为true，开始真正测试
                         }
+                        if (ct.IsFctTestTested)
+                        {
+                            if(!runTimeoutDic.ContainsKey(b))
+                                runTimeoutDic.Add(b, DateTime.Now.AddSeconds(delayTime));
+                        }
                     }
                 }
             }
@@ -235,7 +239,6 @@ namespace VPITest.Model
                 FinishReason = DbADO.TEST_FINISH_RESULT_NORMAL;
                 try
                 {
-                    LastKey = Key;
                     RunningTime = (DateTime.Now.Ticks - StartTime.Ticks) / 10000000;
                     fctMessageLogFile.Close();
                     Save(Key);
@@ -297,9 +300,9 @@ namespace VPITest.Model
             }
         }
         //用户强制结束
-        public void FinishManualTest()
+        public void FinishManualTest(TestStatus preStatus, string reason)
         {
-            FinishReason = DbADO.TEST_FINISH_RESULT_MANUAL;
+            FinishReason = reason;
             foreach (var r in Cabinet.Racks)
             {
                 foreach (var b in r.Boards)
@@ -487,11 +490,11 @@ namespace VPITest.Model
             foreach (var msg in msgList)
             {
                 //if (msg is HeartMsg && msg.CommunicatinBoard != null)
-                if (msg != null && msg.CommunicatinBoard != null)
+                if (msg != null && !(msg is ShakeResponse) &&msg.CommunicatinBoard != null)
                 {
                     if (runTimeoutDic.ContainsKey(msg.CommunicatinBoard))
                     {
-                        runTimeoutDic[msg.CommunicatinBoard] = DateTime.Now.AddSeconds(5);
+                        runTimeoutDic[msg.CommunicatinBoard] = DateTime.Now;
                     }
                 }
             }
@@ -534,7 +537,7 @@ namespace VPITest.Model
 
         private void Save(string key)
         {
-            string pathAndFilename = Util.GetBasePath() + "//Data//Fct//" + key + ".fct";
+            string pathAndFilename = Util.GetBasePath() + "//Data//Component//" + key + ".fct";
             //序列化用户当前的配置
             System.Runtime.Serialization.IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(pathAndFilename, FileMode.OpenOrCreate, FileAccess.Write);
@@ -546,7 +549,7 @@ namespace VPITest.Model
 
         public FctTest LoadByKey(string key)
         {
-            string pathAndFilename = Util.GetBasePath() + "//Data//Fct//" + key + ".fct";
+            string pathAndFilename = Util.GetBasePath() + "//Data//Component//" + key + ".fct";
             try
             {
                 System.Runtime.Serialization.IFormatter formatter = new BinaryFormatter();

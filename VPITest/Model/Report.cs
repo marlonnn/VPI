@@ -43,12 +43,12 @@ namespace VPITest.Model
 
         public static void ExploreFctReportFolder()
         {
-            System.Diagnostics.Process.Start(Util.GetBasePath() + "//Report//Fct");
+            System.Diagnostics.Process.Start(Util.GetBasePath() + "//Report//Component");
         }
 
         public static void ExploreGeneralReportFolder()
         {
-            System.Diagnostics.Process.Start(Util.GetBasePath() + "//Report//General");
+            System.Diagnostics.Process.Start(Util.GetBasePath() + "//Report//SingleBoard");
         }
 
         public static void ExploreSelfDiagReportFolder()
@@ -56,29 +56,19 @@ namespace VPITest.Model
             System.Diagnostics.Process.Start(Util.GetBasePath() + "//Data//Self");
         }
 
-        public static void ExploreFctDiagReportFolder()
-        {
-            System.Diagnostics.Process.Start(Util.GetBasePath() + "//Data//Fct");
-        }
-
-        public static void ExploreGeneralDiagReportFolder()
-        {
-            System.Diagnostics.Process.Start(Util.GetBasePath() + "//Data//General");
-        }
-
         public static string GetUsrFctPdfName(string finishReason,string key, string SN, bool isComponentPass)
         {
             string pdfFile;
             if (isComponentPass)
             {
-                pdfFile = string.Format("{0}//Report//Fct//Passboard//{1}_{2}.pdf",
+                pdfFile = string.Format("{0}//Report//Component//Passboard//{1}_{2}.pdf",
                     Util.GetBasePath(), SN, key);
             }
             else
             {
                 if (finishReason == DbADO.TEST_FINISH_RESULT_NORMAL) 
                 {
-                    pdfFile = string.Format("{0}//Report//Fct//Failboard//{1}_{2}.pdf",
+                    pdfFile = string.Format("{0}//Report//Component//Failboard//{1}_{2}.pdf",
                         Util.GetBasePath(), SN, key);
                 }
                 else 
@@ -92,7 +82,7 @@ namespace VPITest.Model
 
         public static string GetDiagnoseFctPdfName(string key)
         {
-            string pdfFile = pdfFile = string.Format("{0}//Data//Fct//{1}.pdf",Util.GetBasePath(), key); 
+            string pdfFile = pdfFile = string.Format("{0}//Data//Component//{1}.pdf", Util.GetBasePath(), key); 
             return pdfFile;
         }
 
@@ -101,14 +91,14 @@ namespace VPITest.Model
             string pdfFile;
             if (isBoardPass)
             {
-                pdfFile = string.Format("{0}//Report//General//Passboard//{1}_{2}.pdf",
+                pdfFile = string.Format("{0}//Report//SingleBoard//Passboard//{1}_{2}.pdf",
                     Util.GetBasePath(), SN, key);
             }
             else
             {
                 if(finishReason == DbADO.TEST_FINISH_RESULT_NORMAL)
                 {
-                    pdfFile = string.Format("{0}//Report//General//Failboard//{1}_{2}.pdf",
+                    pdfFile = string.Format("{0}//Report//SingleBoard//Failboard//{1}_{2}.pdf",
                         Util.GetBasePath(), SN, key);
                 }
                 else
@@ -122,7 +112,7 @@ namespace VPITest.Model
 
         public static string GetDiagnoseGeneralPdfName(string key)
         {
-            string pdfFile = pdfFile = string.Format("{0}//Data//General//{1}.pdf", Util.GetBasePath(), key);
+            string pdfFile = pdfFile = string.Format("{0}//Data//SingleBoard//{1}.pdf", Util.GetBasePath(), key);
             return pdfFile;
         }
 
@@ -148,14 +138,14 @@ namespace VPITest.Model
                 tmpBoardList.Add(b);
                 boards.Add(b);
                 componentTypes.AddRange(dicts[b]);
-                GenerateFctPdf(fctTest, tmpBoardList, dicts[b], "", true);
+                GenerateFctPdf(fctTest, tmpBoardList, dicts[b], true);
             }
             //生成诊断报告(诊断报告不包含log文件，因为log文件比较大，包含后压缩时间太长)
             //GenerateFctPdf(fctTest, boards, componentTypes, fctMessageLogFile.GetFileName(fctTest.Key), false);
-            GenerateFctPdf(fctTest, boards, componentTypes, "", false);
+            GenerateFctPdf(fctTest, boards, componentTypes, false);
         }
 
-        private void GenerateFctPdf(FctTest fctTest, List<Board> boards, List<ComponentType> componentTypes, string logFile, bool isUserReport)
+        private void GenerateFctPdf(FctTest fctTest, List<Board> boards, List<ComponentType> componentTypes, bool isUserReport)
         {
             BaseFont baseFont;
             try
@@ -213,7 +203,10 @@ namespace VPITest.Model
                 for (int i = 0; i < boards.Count; i++)
                 {
                     names += boards[i].EqName + "\n";
-                    sns += boards[i].FctTestSN + "\n";
+                    if (boards[i].FctTestSN != "")
+                        sns += boards[i].FctTestSN + "\n";
+                    else
+                        sns += "非待测" + "\n";
                     passes += boards[i].IsFctTestPassed() ? "PASS\n" : "FAIL\n";
                     isPass &= componentTypes[i].IsFctTestPassed();
                 }
@@ -262,7 +255,8 @@ namespace VPITest.Model
                 {
                     SetFieldValue(stamper, "IsPass", "PASS");
                     stamper.AcroFields.SetFieldProperty("IsPass", "textsize", 38.0f, null);
-                    stamper.AcroFields.SetFieldProperty("IsPass", "textcolor", BaseColor.BLUE, null);
+                    BaseColor bc = new BaseColor(00, 64, 00);//DarkGreen
+                    stamper.AcroFields.SetFieldProperty("IsPass", "textcolor", bc, null);
                 }
                 else
                 {
@@ -270,18 +264,9 @@ namespace VPITest.Model
                     stamper.AcroFields.SetFieldProperty("IsPass", "textsize", 38.0f, null);
                     stamper.AcroFields.SetFieldProperty("IsPass", "textcolor", BaseColor.RED, null);
                 }
-
-                if (File.Exists(logFile))
-                {
-                    stamper.AddFileAttachment("Diagnostics logs", null, logFile, "log.txt");
-                }
                 stamper.FormFlattening = true;//不允许编辑   
                 stamper.Close();
                 rdr.Close();
-
-                //if (isUserReport)
-                //    System.Diagnostics.Process.Start(pdfFile);
-
             }
             catch (Exception ee)
             {
@@ -300,14 +285,14 @@ namespace VPITest.Model
             {
                 List<Board> tmpBoards = new List<Board>();
                 tmpBoards.Add(b);
-                GenerateGeneralPdf(generalTest, tmpBoards, "", true);
+                GenerateGeneralPdf(generalTest, tmpBoards,  true);
             }
             //生成诊断报告(诊断报告不包含log文件，因为log文件比较大，包含后压缩时间太长)
             //GenerateGeneralPdf(generalTest, boards, generalMessageLogFile.GetFileName(generalTest.Key), false);
-            GenerateGeneralPdf(generalTest, allboards, "", false);
+            GenerateGeneralPdf(generalTest, allboards,  false);
         }
 
-        private void GenerateGeneralPdf(GeneralTest generalTest, List<Board> boards, string logFile, bool isUserReport)
+        private void GenerateGeneralPdf(GeneralTest generalTest, List<Board> boards, bool isUserReport)
         {
             BaseFont baseFont;
             try
@@ -360,7 +345,10 @@ namespace VPITest.Model
                 for (int i = 0; i < boards.Count; i++)
                 {
                     names += boards[i].EqName + "\n";
-                    sns += boards[i].GeneralTestSN + "\n";
+                    if (boards[i].GeneralTestSN != "")
+                        sns += boards[i].GeneralTestSN + "\n";
+                    else
+                        sns += "非待测" + "\n";
                     passes += boards[i].IsGeneralTestPassed ? "PASS\n" : "FAIL\n";
                     isPass &= boards[i].IsGeneralTestPassed;
                 }
@@ -375,18 +363,14 @@ namespace VPITest.Model
                 {
                     SetFieldValue(stamper, "IsPass", "PASS");
                     stamper.AcroFields.SetFieldProperty("IsPass", "textsize", 38.0f, null);
-                    stamper.AcroFields.SetFieldProperty("IsPass", "textcolor", BaseColor.BLUE, null);
+                    BaseColor bc = new BaseColor(00,64,00);//DarkGreen
+                    stamper.AcroFields.SetFieldProperty("IsPass", "textcolor", bc, null);
                 }
                 else
                 {
                     SetFieldValue(stamper, "IsPass", "FAIL");
                     stamper.AcroFields.SetFieldProperty("IsPass", "textsize", 38.0f, null);
                     stamper.AcroFields.SetFieldProperty("IsPass", "textcolor", BaseColor.RED, null);
-                }
-
-                if (File.Exists(logFile))
-                {
-                    stamper.AddFileAttachment("Diagnostics logs", null, logFile, "log.txt");
                 }
                 stamper.FormFlattening = true;//不允许编辑   
                 stamper.Close();

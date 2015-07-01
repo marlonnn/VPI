@@ -349,9 +349,13 @@ namespace VPITest.Protocol
 
         public int ErrorTimes;
 
-        public bool OCK;//OCK：true 错误
+        public int smallCycleBoard;//小周期号
 
-        public bool OutPut;
+        public bool OCK;//OCK：true OCK错误
+
+        public bool OutPut;//是否有输出
+
+        public bool ErrorCode;//ErrorCode:true 测试字错误
 
         public override List<BaseResponse> Decode(BasePackage bp, OriginalBytes obytes)
         {
@@ -373,14 +377,16 @@ namespace VPITest.Protocol
                     realCodes[i] = System.BitConverter.ToUInt32(bp.AppData, 6 + i * 4);
                     errorTimes[i] = System.BitConverter.ToInt32(bp.AppData, 6 + 64 + i * 4);
                 }
-
-                int a = (int)((bp.AppData[4] & 0xFF) | ((bp.AppData[5] << 8) & 0xFF00));
+                
+                int a = (int)(((bp.AppData[4] << 8) & 0xFF00) | (bp.AppData[5] & 0x00FF));
                 byte[] eqId = new byte[] { 0x05, rackNo, slotNo, 0xFF, 0xFF };
                 //byte[] eqId = GetEqId(rackNo, slotNo);
                 for (int i = 0; i < 16; ++i)
                 {
                     if (((a >> i) & 0x01) == 0x01)//error
                     {
+                        //例如 02 04 02 05 01 00 
+                        //表示 1 机笼 4槽道 VOB16板卡 01 00 ->0000 0001 0000 0000 : 第9个灯位有问题
                         int posk = (rackNo - 2) * 12 * 16 + (slotNo - 2) * 16 + i;
                         if (boardType == 0x01)//VIB
                         {
@@ -389,10 +395,13 @@ namespace VPITest.Protocol
                             vibR.DtTime = DateTime.Now;
                             vibR.OriginalBytes = obytes;
                             vibR.Board = cabinet.FindEq(eqId) as Board;
+                            vibR.Board.BoardType = "VIB";
                             vibR.LightPos = i + 1;
                             vibR.ExpectedCode = Util.vib_true[posk];
                             vibR.RealCode = realCodes[i];
                             vibR.ErrorTimes = errorTimes[i];
+                            int readableSmallCycle = (int)smallCycle + 1;
+                            vibR.smallCycleBoard = readableSmallCycle;
                             list.Add(vibR);
                         }
                         else if (boardType == 0x02)//VOB
@@ -402,18 +411,21 @@ namespace VPITest.Protocol
                             vobR.DtTime = DateTime.Now;
                             vobR.OriginalBytes = obytes;
                             vobR.Board = cabinet.FindEq(eqId) as Board;
+                            vobR.Board.BoardType = "VOB";
                             vobR.LightPos = i + 1;
                             vobR.RealCode = realCodes[i];
                             vobR.ErrorTimes = errorTimes[i];
 
                             byte[] cycleNo = new byte[2];
-                            Array.Copy(obytes.Data, 1, cycleNo, 0, 2);
-                            int value = (int)((cycleNo[0] & 0xFF) | ((cycleNo[1] << 8) & 0xFF00));
-                            int readableSmallCycle = (int)smallCycle + 1;
+                            Array.Copy(obytes.Data, 3, cycleNo, 0, 2);//帧协议中周期号四个字节中的低两位作为是否有输出
+                            uint value = (uint)(((cycleNo[0] << 8) & 0xFF00) | (cycleNo[1] & 0x00FF));
+                            int readableSmallCycle = (int)smallCycle;
+                            vobR.smallCycleBoard = readableSmallCycle;
                             if (((value >> i) & 0x01) == 0x01)//有输出
                             {
                                 //VOB板卡第i个灯位错误，且当前灯位亮的状态(有输出)
                                 vobR.OutPut = true;
+                                vobR.ErrorCode = false;
                                 if (readableSmallCycle == 2)
                                 {
                                     vobR.ExpectedCode = Util.vob_ock_even[posk];
@@ -441,7 +453,7 @@ namespace VPITest.Protocol
                             {
                                 //当前的灯位灭的状态（无输出）
                                 vobR.OutPut = false;
-                                vobR.OCK = false;
+                                vobR.ErrorCode = true;
                                 if (readableSmallCycle == 0 || readableSmallCycle == 2 ||
                                     readableSmallCycle == 4 || readableSmallCycle == 6 ||
                                     readableSmallCycle == 8)
@@ -467,8 +479,19 @@ namespace VPITest.Protocol
         {
             if (Board.BoardType.Contains("VOB"))
             {
+                string outstring;
+                string ockstring;
+                outstring = OutPut ? "有输出" : "无输出";
+                if(ErrorCode)
+                {
+                    ockstring = "测试字错误";
+                }
+                else 
+                {
+                    ockstring = OCK ? "OCK错误" : "未驱动错";
+                }
                 return string.Format("{0}板卡端口{1}报错，周期号为{2}，输出状态为{3}，错误次数为{4}，错误类型为{5}，期望码字为0x{6:X8}，实际码字为0x{7:X8}",
-                    Board.EqName, LightPos, (LightPos - 1), (OutPut ? "有输出":"无输出"),ErrorTimes, (OCK ? "OCK错误" : "未驱动错"), ExpectedCode, RealCode);
+                    Board.EqName, LightPos, smallCycleBoard, outstring, ErrorTimes, ockstring, ExpectedCode, RealCode);
             }
             else
             {
@@ -496,6 +519,7 @@ namespace VPITest.Protocol
             this.DtTime = vib.DtTime;
             this.OriginalBytes = vib.OriginalBytes;
             this.Board = vib.Board;
+            this.smallCycleBoard = vib.smallCycleBoard;
             this.LightPos = vib.LightPos;
             this.ExpectedCode = vib.ExpectedCode;
             this.RealCode = vib.RealCode;
@@ -512,6 +536,10 @@ namespace VPITest.Protocol
             this.DtTime = vob.DtTime;
             this.OriginalBytes = vob.OriginalBytes;
             this.Board = vob.Board;
+            this.smallCycleBoard = vob.smallCycleBoard;
+            this.OCK = vob.OCK;
+            this.OutPut = vob.OutPut;
+            this.ErrorCode = vob.ErrorCode;
             this.LightPos = vob.LightPos;
             this.ExpectedCode = vob.ExpectedCode;
             this.RealCode = vob.RealCode;

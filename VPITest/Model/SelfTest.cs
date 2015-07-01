@@ -47,13 +47,11 @@ namespace VPITest.Model
                         }
                         if (!preTimeoutDic.ContainsKey(b.CommunicationIP))
                             preTimeoutDic.Add(b.CommunicationIP, false);
-                        if (!runTimeoutDic.ContainsKey(b.CommunicationIP))
-                            runTimeoutDic.Add(b.CommunicationIP, DateTime.Now);
                     }
                 }
             }
             //进入临界状态
-            GenTestStatusChangeEvent(TestStatus, TestStatus.THRESHOLD, "开始或者重新开始一次新的综合测试。");
+            GenTestStatusChangeEvent(TestStatus, TestStatus.THRESHOLD, "开始或者重新开始一次新的自检测试。");
             TestStatus = TestStatus.THRESHOLD;
             try
             {
@@ -71,12 +69,13 @@ namespace VPITest.Model
 
         protected override void FinishExpectedTest()
         {
-            //发送正常结束指令
-            txMsgQueue.Push(StopGeneralTestRequest.CreateNew(Cabinet.Racks[0].Boards[0]));
-            txMsgQueue.Push(StopGeneralTestRequest.CreateNew(Cabinet.Racks[0].Boards[3]));
+            FinishReason = DbADO.TEST_FINISH_RESULT_NORMAL;
             //先切换状态，然后执行耗时操作
             if (TestStatus != TestStatus.EXPECTED_FINNISH)
             {
+                //发送正常结束指令
+                txMsgQueue.Push(StopGeneralTestRequest.CreateNew(Cabinet.Racks[0].Boards[0]));
+                txMsgQueue.Push(StopGeneralTestRequest.CreateNew(Cabinet.Racks[0].Boards[3]));
                 TestStatus = TestStatus.EXPECTED_FINNISH;
                 try
                 {
@@ -95,7 +94,7 @@ namespace VPITest.Model
                     LogHelper.GetLogger<FctTest>().Error(ee.ToString());
                 }
                 testSemaphore.Release();
-                GenTestStatusChangeEvent(TestStatus.RUNNING, TestStatus, "系统自动从正式测试状态转入正常结束状态。");
+                GenTestStatusChangeEvent(TestStatus.RUNNING, TestStatus, FinishReason);
             }
         }
     }

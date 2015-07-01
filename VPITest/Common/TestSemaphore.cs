@@ -15,9 +15,9 @@ namespace VPITest.Common
             set;
         }
 
-        public static string GENERAL_RUNNING = "综合测试";
+        public static string GENERAL_RUNNING = "单板测试";
         public static string SELF_RUNNING = "系统自检";
-        public static string FCT_RUNNING = "单项测试";
+        public static string FCT_RUNNING = "组件测试";
 
         public TestSemaphore()
         {

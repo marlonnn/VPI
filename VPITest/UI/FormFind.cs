@@ -45,7 +45,7 @@ namespace VPITest.UI
                 cbFinishResult.Items.Add("全部");
                 cbFinishResult.Items.Add(DbADO.TEST_FINISH_RESULT_NORMAL);
                 cbFinishResult.Items.Add(DbADO.TEST_FINISH_RESULT_MANUAL);
-                cbFinishResult.SelectedIndex = 1;
+                cbFinishResult.SelectedIndex = 0;
 
                 DataGridViewButtonXColumn btnColumn = dataGridView.Columns[11] as DataGridViewButtonXColumn;
                 btnColumn.Click += new EventHandler<EventArgs>(openUsrRpt_Click);
@@ -66,6 +66,11 @@ namespace VPITest.UI
         {            
             DateTime dtBegin = dtiBegin.Value;
             DateTime dtEnd = dtiEnd.Value.AddDays(1);
+            if (dtBegin > dtEnd.AddDays(-1))
+            {
+                MessageBox.Show(string.Format("开始查询时间应小于结束查询时间"));
+                return;
+            }
             if (cbNoLimitDate.Checked)
             {
                 dtBegin = DateTime.MinValue;
@@ -112,15 +117,15 @@ namespace VPITest.UI
                     if (findType == FIND_TYPE_FCT)
                     {
 
-                        aRow.Cells[11].Value= Report.GetUsrFctPdfName(d.TestNote,d.Key, d.BoardSn, d.IsTestedItemPass == "PASS");
-                        aRow.Cells[12].Value = Report.GetDiagnoseFctPdfName(d.Key);
-                        aRow.Cells[13].Value = fctMessageLogFile.GetFileName(d.Key);
+                        aRow.Cells[11].Value = StringFormat(Report.GetUsrFctPdfName(d.TestNote, d.Key, d.BoardSn, d.IsTestedItemPass == "PASS"));
+                        aRow.Cells[12].Value = StringFormat(Report.GetDiagnoseFctPdfName(d.Key));
+                        aRow.Cells[13].Value = StringFormat(fctMessageLogFile.GetFileName(d.Key));
                     }
                     else
                     {
-                        aRow.Cells[11].Value = Report.GetUsrGeneralPdfName(d.TestNote, d.Key, d.BoardSn, d.IsTestedItemPass == "PASS");
-                        aRow.Cells[12].Value = Report.GetDiagnoseGeneralPdfName(d.Key);
-                        aRow.Cells[13].Value = generalMessageLogFile.GetFileName(d.Key);
+                        aRow.Cells[11].Value = StringFormat(Report.GetUsrGeneralPdfName(d.TestNote, d.Key, d.BoardSn, d.IsTestedItemPass == "PASS"));
+                        aRow.Cells[12].Value = StringFormat(Report.GetDiagnoseGeneralPdfName(d.Key));
+                        aRow.Cells[13].Value = StringFormat(generalMessageLogFile.GetFileName(d.Key));
                     }
                     rows[i] = aRow;
                     i++;
@@ -133,6 +138,11 @@ namespace VPITest.UI
                 MessageBox.Show(ee.Message);
             }
             btnQuery.Enabled = true;
+        }
+
+        private string StringFormat(string original)
+        {
+            return original.Replace(@"//", @"\").Replace(@"\\",@"\");
         }
 
         private void openUsrRpt_Click(object sender, EventArgs e)
@@ -213,30 +223,18 @@ namespace VPITest.UI
                 }                
             }
             Clipboard.SetFileDropList(paths);
-            MessageBox.Show("文件已经复制到剪贴板，请打开目标文件夹，然后单击鼠标右键，点击“粘贴”，开始复制文件。");
+            MessageBox.Show("文件已经复制到剪贴板，请创建一个目标文件夹，然后单击鼠标右键，点击“粘贴”，开始复制文件。");
         }
 
-        private void cbNoLimitDate_CheckedChanged(object sender, EventArgs e)
+        private void cb_CheckedChanged(object sender, EventArgs e)
         {
             CheckBoxX select = sender as CheckBoxX;
-            if(select.Checked == true)
+            if (select.Checked == true)
             {
                 if (cbLastMonth == select)
                     cbNoLimitDate.Checked = false;
                 else
                     cbLastMonth.Checked = false;
-            }
-        }
-
-        private void cbLastMonth_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckBoxX select = sender as CheckBoxX;
-            if (select.Checked == true)
-            {
-                if (cbNoLimitDate == select)
-                    cbLastMonth.Checked = false;
-                else
-                    cbNoLimitDate.Checked = false;
             }
         }
     }

@@ -21,8 +21,6 @@ namespace VPITest.Model
     {
         //Key测试序号，唯一标识本次测试
         public string Key;
-        //上一次的key
-        public string LastKey;
         //测试人
         public string Tester = "";
         //待测试机柜
@@ -61,6 +59,8 @@ namespace VPITest.Model
         protected int preTimeout;                     //spring初始化完成后后，重载也不覆盖，单态唯一
         [NonSerialized]
         protected int runTimeout;                    //spring初始化完成后后，重载也不覆盖，单态唯一
+        [NonSerialized]
+        protected int delayTime;    //开始正式开始第一次心跳宽恕(单位：秒)
 
         [field: NonSerialized]
         protected DateTime preTestTime;
@@ -135,13 +135,11 @@ namespace VPITest.Model
                     { 
                         if( !preTimeoutDic.ContainsKey(b.CommunicationIP))
                             preTimeoutDic.Add(b.CommunicationIP, false); 
-                        if( !runTimeoutDic.ContainsKey(b.CommunicationIP))
-                            runTimeoutDic.Add(b.CommunicationIP, DateTime.Now);
                     }
                 }
             }
             //进入临界状态
-            GenTestStatusChangeEvent(TestStatus, TestStatus.THRESHOLD,"开始或者重新开始一次新的综合测试。");
+            GenTestStatusChangeEvent(TestStatus, TestStatus.THRESHOLD,"开始或者重新开始一次新的单板测试。");
             TestStatus = TestStatus.THRESHOLD;
             try
             {
@@ -174,6 +172,11 @@ namespace VPITest.Model
                 foreach (var b in r.Boards)
                 {
                     b.IsGeneralTestPassed = true;
+                    if (b.IsGeneralTestTested)
+                    {
+                        if (!runTimeoutDic.ContainsKey(b.CommunicationIP))
+                            runTimeoutDic.Add(b.CommunicationIP, DateTime.Now.AddSeconds(delayTime));
+                    }
                 }
             }
             //初始化检查规则
@@ -198,7 +201,6 @@ namespace VPITest.Model
                 testSemaphore.Release();
                 try
                 {
-                    LastKey = Key;
                     RunningTime = (DateTime.Now.Ticks - StartTime.Ticks) / 10000000;
                     generalMessageLogFile.Close();
                     Save(Key);
@@ -248,6 +250,14 @@ namespace VPITest.Model
                 testSemaphore.Release();
                 GenTestStatusChangeEvent(preStatus, TestStatus, reason);
             }
+            //foreach (var r in Cabinet.Racks)
+            //{
+            //    foreach (var b in r.Boards)
+            //    {
+            //        if (b.CanGeneralTest)
+            //            b.IsGeneralTestTested = false;
+            //    }
+            //}
         }
 
         public void FinishManualTest(TestStatus preStatus, string reason)
@@ -274,19 +284,11 @@ namespace VPITest.Model
                 testSemaphore.Release();
                 try
                 {
-                    LastKey = Key;
                     RunningTime = (DateTime.Now.Ticks - StartTime.Ticks) / 10000000;
                     generalMessageLogFile.Close();
                     Save(Key);
                     dbAdo.Save2DB(this);
                     report.GenerateUserPdf(this);
-                    foreach (var r in Cabinet.Racks)
-                    {
-                        foreach (var b in r.Boards)
-                        {
-                            b.GeneralTestSN = "";
-                        }
-                    }
                 }
                 catch (Exception ee)
                 {
@@ -489,11 +491,12 @@ namespace VPITest.Model
             //更新心跳记录
             foreach (var msg in msgList)
             {
-                if (msg !=null && msg.CommunicatinBoard != null)
+                //握手消息需要过滤掉
+                if (msg != null && !(msg is ShakeResponse ) && msg.CommunicatinBoard != null)
                 {
                     if (runTimeoutDic.ContainsKey(msg.CommunicatinBoard.CommunicationIP))
                     {
-                        runTimeoutDic[msg.CommunicatinBoard.CommunicationIP] = DateTime.Now.AddSeconds(5);
+                        runTimeoutDic[msg.CommunicatinBoard.CommunicationIP] = DateTime.Now;
                     }
                 }
             }            
@@ -528,7 +531,7 @@ namespace VPITest.Model
         //保存当前对象到硬盘，用于程序下次启动时
         private void Save(string key)
         {
-            string pathAndFilename = Util.GetBasePath() + "//Data//General//" + key + ".gnl";
+            string pathAndFilename = Util.GetBasePath() + "//Data//SingleBoard//" + key + ".gnl";
             //序列化用户当前的配置
             System.Runtime.Serialization.IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(pathAndFilename, FileMode.OpenOrCreate, FileAccess.Write);
@@ -540,7 +543,7 @@ namespace VPITest.Model
 
         public GeneralTest LoadByKey(string key)
         {
-            string pathAndFilename = Util.GetBasePath() + "//Data//General//" + key + ".gnl";
+            string pathAndFilename = Util.GetBasePath() + "//Data//SingleBoard//" + key + ".gnl";
             try
             {
                 System.Runtime.Serialization.IFormatter formatter = new BinaryFormatter();

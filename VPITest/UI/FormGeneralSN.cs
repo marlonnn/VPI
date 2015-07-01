@@ -94,6 +94,7 @@ namespace VPITest.UI
         private void btnOk_Click(object sender, EventArgs e)
         {
             List<Board> boards = new List<Board>();
+            HashSet<String> snSet = new HashSet<string>();
             foreach (Control c in this.panel.Controls)
             {
                 if (c.Tag != null && c.Tag is Board)
@@ -109,25 +110,27 @@ namespace VPITest.UI
                     }
                     else
                     {
+                        if(!snSet.Contains(tb.Text))
+                        {
+                            snSet.Add(tb.Text);
+                        }
+                        else 
+                        {
+                            MessageBox.Show(string.Format("SN号不能重复。"));
+                            return;
+                        }
                         b.GeneralTestSN = tb.Text;
                     }
                 }
             }
-            for (int i = 0; i < boards.Count;i++ )
-            {
-                for (int j = i + 1; j < boards.Count;j++ )
-                {
-                    if(boards[i].GeneralTestSN == boards[j].GeneralTestSN)
-                    {
-                        MessageBox.Show(string.Format("SN号不能重复。"));
-                        return;
-                    }
-                }
-            }
-
             try
             {
                 generalTest.PlanRunningTime = 60 * int.Parse(tbRunningPlan.Text);
+                if (generalTest.PlanRunningTime <= 0)
+                {
+                    MessageBox.Show("测试预设时间应该大于0。");
+                    return;
+                }
             }
             catch (Exception ee)
             {

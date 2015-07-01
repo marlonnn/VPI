@@ -8,13 +8,14 @@
     <property name="rxFctMsgQueue" ref="rxFctMsgQueue"/>
     <property name="preTimeout" value="15"/>
     <property name="runTimeout" value="5"/>
+    <property name="delayTime" value="7"/>
     <property name="fctMessageLogFile" ref="fctMessageLogFile"/>
     <property name="dbADO" ref="dbADO"/>
     <property name="report" ref="report"/>
     <property name="testSemaphore" ref="testSemaphore"/>
   </object>
   <object name="fctMessageLogFile" type="VPITest.Model.MessageLogFile, VPITest">
-    <property name="basePath" value="\\Data\\Fct\\"/>
+    <property name="basePath" value="\\Data\\Component\\"/>
   </object>
 
   <object name="generalTest" type="VPITest.Model.GeneralTest, VPITest">
@@ -23,6 +24,7 @@
     <property name="rxGeneralMsgQueue" ref="rxGeneralMsgQueue"/>
     <property name="preTimeout" value="15"/>
     <property name="runTimeout" value="5"/>
+    <property name="delayTime" value="7"/>
     <property name="generalMessageLogFile" ref="generalMessageLogFile"/>
     <property name="dbADO" ref="dbADO"/>
     <property name="report" ref="report"/>
@@ -30,17 +32,18 @@
     <property name="judgeMatrix" ref="judgeMatrix" />
   </object>  
   <object name="generalMessageLogFile" type="VPITest.Model.MessageLogFile, VPITest">
-    <property name="basePath" value="\\Data\\General\\"/>
+    <property name="basePath" value="\\Data\\SingleBoard\\"/>
   </object>
 
   <object name="selfTest" type="VPITest.Model.SelfTest, VPITest">
     <property name="Tester" value="自检测试"/>
-    <property name="PlanRunningTime" value="60"/>
+    <property name="PlanRunningTime" value="300"/>
     <property name="Cabinet" ref="cabinet"/>
     <property name="txMsgQueue" ref="txMsgQueue"/>
     <property name="rxGeneralMsgQueue" ref="rxSelfMsgQueue"/>
     <property name="preTimeout" value="15"/>
     <property name="runTimeout" value="5"/>
+    <property name="delayTime" value="7"/>
     <property name="generalMessageLogFile" ref="selfMessageLogFile"/>
     <property name="testSemaphore" ref="testSemaphore"/>
     <property name="judgeMatrix"  ref="judgeMatrix" />
@@ -53,10 +56,10 @@
     <property name="version" ref="version"/>
     <property name="fctTempletFile" value="Templet\\fct_report.pdf"/>
     <property name="generalTempletFile" value="Templet\\general_report.pdf"/>
-    <property name="fctUserReportTitle" value="VPI组件测试用户报告"/>
-    <property name="fctDiagReportTitle" value="VPI组件测试诊断报告"/>
-    <property name="generalUserReportTitle" value="VPI单板测试用户报告"/>
-    <property name="generalDiagReportTitle" value="VPI单板测试诊断报告"/>
+    <property name="fctUserReportTitle" value="VPI3组件测试用户报告"/>
+    <property name="fctDiagReportTitle" value="VPI3组件测试诊断报告"/>
+    <property name="generalUserReportTitle" value="VPI3单板测试用户报告"/>
+    <property name="generalDiagReportTitle" value="VPI3单板测试诊断报告"/>
     <property name="fontFile" value="C:/WINDOWS/Fonts/SimHei.TTF"/>
     <property name="fontSizeHead" value="6"/>
     <property name="fontSizeBody" value="8"/>

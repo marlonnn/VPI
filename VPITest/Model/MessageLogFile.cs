@@ -28,6 +28,8 @@ namespace VPITest.Model
                 lock (lockFile)
                 {
                     sw = new StreamWriter(GetFileName(key));
+                    sw.WriteLine("{0},{1},{2},{3}",
+                        "时间","消息类型","消息","原始数据");
                 }
             }
             catch (Exception ee)
@@ -67,9 +69,8 @@ namespace VPITest.Model
                     {
                         if (br.OriginalBytes != null && br.OriginalBytes.Data != null)
                         {
-                            sw.WriteLine("{0},{1},{2},{3},{4}",
+                            sw.WriteLine("{0},{1},{2},{3}",
                                 Util.FormateDateTime3(br.DtTime),
-                                br.CycleNo,
                                 br.GetType().ToString(),
                                 br.ToString(),
                                 Summer.System.Util.ByteHelper.Byte2ReadalbeXstring(br.OriginalBytes.Data)

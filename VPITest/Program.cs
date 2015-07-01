@@ -28,7 +28,7 @@ namespace VPITest
                 FormMain formMain = SpringHelper.GetObject<FormMain>("formMain");
                 //FrmMain frmMain = SpringHelper.GetObject<FrmMain>("frmMain");
                 //重新载入上次的配置文件
-                ReloadLastData();
+                //ReloadLastData();
                 Application.Run(formMain);
             }
             catch (Exception ee)

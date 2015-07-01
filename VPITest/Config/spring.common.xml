@@ -21,11 +21,11 @@
   </object>
 
   <object name="generalGlobalConfig" type="VPITest.Common.GlobalConfig, VPITest">
-    <property name="basePath" value="\\Data\\General\\"/>
+    <property name="basePath" value="\\Data\\SingleBoard\\"/>
   </object>
 
   <object name="fctGlobalConfig" type="VPITest.Common.GlobalConfig, VPITest">
-    <property name="basePath" value="\\Data\\Fct\\"/>
+    <property name="basePath" value="\\Data\\Component\\"/>
   </object>
 
   <object name="txQueue" type="VPITest.Common.TxQueue, VPITest">
